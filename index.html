@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy birthday</title>
+  <style>
+    /* General Page Styling */
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: black;
+      color: white;
+      overflow: hidden;
+    }
+
+    /* Happy Birthday Message Styling */
+    #happyBirthdayMessage {
+      position: absolute;
+      top: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 3.5rem;
+      font-weight: bold;
+      background: linear-gradient(to right, #ff6f91, #fad0c4, #fbc2eb);
+      -webkit-background-clip: text;
+      color: transparent;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 3s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Paragraph Styling */
+    .paragraph-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      text-align: center;
+    }
+
+    .paragraph {
+      overflow: hidden;
+      max-height: 4.5rem; /* Show 3 lines */
+      transition: max-height 0.5s ease-in-out;
+      font-size: 1.2rem;
+      line-height: 1.5;
+      color: #f5f5f5; /* Off-white color */
+    }
+
+    .paragraph.expanded {
+      max-height: none;
+    }
+
+    .expand-button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      background: #ff9a9e;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .expand-button:hover {
+      background: #f06595;
+    }
+
+    /* Balloon Styling */
+    .balloon {
+      position: absolute;
+      width: 60px;
+      height: 80px;
+      background: radial-gradient(circle, #ff6f91, #ff9a9e);
+      border-radius: 50%;
+      animation: floatUp 6s ease-in-out infinite;
+    }
+
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      width: 2px;
+      height: 20px;
+      background: white;
+      transform: translateX(-50%);
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(100vh) scale(1); opacity: 1; }
+      to { transform: translateY(-200px) scale(1.2); opacity: 0; }
+    }
+
+    /* Video Button Styling */
+    #videoButton {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 15px 30px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease-in-out, background 0.3s;
+    }
+
+    #videoButton:hover {
+      transform: scale(1.1);
+      background: linear-gradient(135deg, #fbc2eb, #ff9a9e);
+    }
+
+    /* Video Modal Styling */
+    .video-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 20;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .video-container video {
+      max-width: 80%;
+      max-height: 80%;
+      border: 5px solid white;
+      border-radius: 10px;
+    }
+
+    .video-container button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      color: white;
+      background: #ff6f91;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .video-container button:hover {
+      background: #f43b6d;
+    }
+
+    /* Footer with Name */
+    footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div id="happyBirthdayMessage">🎉   Happy Birthday🎂!! 🅽🅰🅸🆂🅷🅰 💞💐   🎉</div>
+
+  <div class="paragraph-container">
+    <p class="paragraph" id="paragraph">
+      Wishing you a day filled with happiness and a year filled with joy. 
+      You deserve all the wonderful things life has to offer on this special day. 
+      May your day be filled with love, laughter, and unforgettable moments. 
+      Here's to celebrating the amazing person you are and the incredible year ahead! 🎂
+    </p>
+    <button class="expand-button" id="expandButton" onclick="toggleParagraph()">Show More</button>
+  </div>
+
+  <button id="videoButton" onclick="showVideo()">Click to See Video</button>
+
+  <div class="video-container" id="videoContainer">
+    <video id="birthdayVideo" controls>
+      <source src="candy.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <button onclick="closeVideo()">Close Video</button>
+  </div>
+
+  <footer>
+   @ Abdul Bashith
+  </footer>
+
+  <script>
+    const body = document.body;
+    const paragraph = document.getElementById('paragraph');
+    const expandButton = document.getElementById('expandButton');
+
+    // Function to create balloons
+    function createBalloon() {
+      const balloon = document.createElement('div');
+      balloon.classList.add('balloon');
+      balloon.style.left = `${Math.random() * window.innerWidth}px`;
+      balloon.style.background = `radial-gradient(circle, hsl(${Math.random() * 360}, 70%, 60%), hsl(${Math.random() * 360}, 70%, 40%))`;
+      body.appendChild(balloon);
+
+      // Remove balloon after animation
+      balloon.addEventListener('animationend', () => balloon.remove());
+    }
+
+    // Generate balloons periodically
+    setInterval(createBalloon, 500);
+
+    // Show video modal
+    function showVideo() {
+      const videoContainer = document.getElementById('videoContainer');
+      videoContainer.style.display = 'flex';
+    }
+
+    // Close video modal
+    function closeVideo() {
+      const videoContainer = document.getElementById('videoContainer');
+      videoContainer.style.display = 'none';
+      const video = document.getElementById('birthdayVideo');
+      video.pause();
+    }
+
+    // Toggle paragraph expansion
+    function toggleParagraph() {
+      paragraph.classList.toggle('expanded');
+      expandButton.innerText = paragraph.classList.contains('expanded') ? 'Show Less' : 'Show More';
+    }
+  </script>
+</body>
+</html>
